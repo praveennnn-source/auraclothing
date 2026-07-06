@@ -12,15 +12,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t fashion-store .'
+                sh 'docker build -t auraclothing .'
             }
         }
 
         stage('Stop Old Container') {
             steps {
                 sh '''
-                docker stop fashion-store || true
-                docker rm fashion-store || true
+                docker stop auraclothing || true
+                docker rm auraclothing || true
                 '''
             }
         }
@@ -29,11 +29,11 @@ pipeline {
             steps {
                 sh '''
                 docker run -d \
-                --name fashion-store \
+                --name auraclothing \
                 -p 80:80 \
-                fashion-store
+                auraclothing
                 '''
             }
         }
     }
-}g
+}

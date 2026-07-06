@@ -6,7 +6,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/YOUR_USERNAME/fashion-store.git'
+                    url: 'https://github.com/praveennnn-source/auraclothing.git'
             }
         }
 

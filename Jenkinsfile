@@ -1,9 +1,14 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "auraclothing"
+        CONTAINER_NAME = "auraclothing"
+    }
+
     stages {
 
-        stage('Clone Repository') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/praveennnn-source/auraclothing.git'
@@ -12,15 +17,16 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t auraclothing .'
+                sh '''
+                docker build -t $IMAGE_NAME .
+                '''
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Remove Old Container') {
             steps {
                 sh '''
-                docker stop auraclothing || true
-                docker rm auraclothing || true
+                docker rm -f $CONTAINER_NAME || true
                 '''
             }
         }
@@ -29,11 +35,29 @@ pipeline {
             steps {
                 sh '''
                 docker run -d \
-                --name auraclothing \
+                --name $CONTAINER_NAME \
                 -p 80:80 \
-                auraclothing
+                $IMAGE_NAME
                 '''
             }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                docker ps
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Application deployed successfully!'
+        }
+
+        failure {
+            echo 'Deployment failed!'
         }
     }
 }
